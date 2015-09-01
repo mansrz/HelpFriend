@@ -1,0 +1,76 @@
+body {
+}
+
+.ocultar{
+    display:none;
+}
+
+.mostrar{
+    display: block;
+}
+
+.detras{
+    position: fixed;
+	top: 0px;
+    width: 100%;
+    /*indicamos que el margen izquierdo e*/
+    /*Determinamos la altura*/
+    height: 100%;
+    /*indicamos el margen superior es la mitad de la altura*/
+    padding: 5px;
+	background: rgba(100, 100, 100, 0.6);
+	left:0px;
+    z-index: 1032;
+}
+
+
+.centrado{
+	background: rgba(255, 255, 255, 1);
+    position: absolute;
+    /*Centro del navegador*/
+    top: 50%;
+    left: 30%;
+    /*Determinamos anchura*/
+    width: 80%;
+    /*indicamos el margen superior es la mitad de la altura*/
+
+    text-align: left;
+    padding: 20px;
+    z-index: 1033;
+}
+
+.lista_busqueda{
+    position: absolute;
+    width: 100%;
+    display: flex;
+}
+
+.busqueda-result{
+    margin-left:10px;
+}
+
+.item-seleccionado:hover{
+    background-color: #515151;
+    color: #fff;
+}
+
+.busqueda-result-header{
+    margin-left:20px;
+}
+
+.item-seleccionado{
+    padding-top:3px;
+}
+
+.notificacion{
+  position: fixed;
+  /* float: right; */
+  right: 1%;
+  z-index: 2000;
+  height: 100px;
+  width: 300px;
+  top: 550px;
+  -webkit-box-shadow: 0 0 5px black;
+  -moz-box-shadow: 0 0 5px black;
+  box-shadow: 0 0 5px black;
+}

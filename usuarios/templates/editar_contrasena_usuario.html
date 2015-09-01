@@ -1,0 +1,114 @@
+{% extends "profile_usuario.html" %}
+
+    {%block css%}
+    <link rel="stylesheet" href='/static/css/demo.css'>
+
+    {%endblock%}
+    {%block contenidousuario%}
+
+    <!-- Editar Perfil Usuario-->
+    <div class=" col-xs-6 col-sm-8 col-md-9">
+    <div class="row">
+    <div class="signup col-md-9">
+        
+        <h3 class="hl top-zero">Editar Contrase&ntilde;a</h3>
+        <hr>
+        <div class="col-md-9">
+                <br>
+        </div>
+        <form role="form" action="/editarContrasena/" method="post" enctype="multipart/form-data" class="form-horizontal col-md-12">{% csrf_token %}
+            
+            <!--CONTRASEÑA ACTUAL-->
+
+            <div class="form-group">
+                        {% if mensaje %}
+                            <div class="alert alert-success alert-dismissible col-md-offset-3 col-md-8" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                              <strong><p><span class="glyphicon glyphicon-ok-sign"></span> {{ mensaje }}</p></strong>
+                            </div>
+                        {% endif %}
+               
+                <label for="contrasenaActual" class="col-md-8">Contrase&ntilde;a Actual</label>
+
+                <div class="col-md-8">
+                    <input required autofocus type="password" class="form-control" id="passwordActual" name="passwordActual" placeholder="Contraseña Actual" data-toggle="popover" data-trigger="focus" data-content="Asegurate de recordarla" data-original-title="Contraseña Actual">
+                </div>
+            </div>
+
+            <div class="form-group col-md-8">
+                <p id="error_password_incorrecta"></p>
+            </div>
+
+            <div class="form-group">
+                        <label for="passwordSet1" class="col-md-8">Escriba su nueva contrase&ntilde;a</label>
+
+                        <div class="col-md-8">
+                            <input type="password" class="form-control passwordSet1" id="passwordSet1" placeholder="Nueva Contraseña"
+                                   name="passwordSet1" required>
+                        </div>
+                    </div>
+                    <div class="form-group" >
+                        <label for="passwordSet2" class="col-md-8">Repita su nueva contrase&ntilde;a</label>
+
+                        <div class="col-md-8">
+                            <input type="password" class="form-control passwordSet2" id="passwordSet2" placeholder="Repita nueva Contraseña"
+                                   name="passwordSet2" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-8">
+                        <p class="mensaje_error"></p>
+                    </div>
+
+                    <div class="form-group">
+
+                    <button type="button" style="float:right" class="btn btn-green btn_confirmar_password" data-toggle="modal" data-placement="bottom" data-target="#confirmar_cambio_pass">Guardar Contrase&ntilde;a</button>
+
+                    </div>
+
+
+<!-- Modal window: Cambiar Contraseña -->
+<div class="modal fade" id="confirmar_cambio_pass" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content col-md-12">
+            <div class="modal-header" >
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <br/>
+                <br/>
+
+                <p> <strong><h5 class="text-info">Est&aacute; seguro de cambiar la contrase&ntilde;a de su cuenta en Reinet?</h5></strong></p>
+                
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="modal-body col-md-11">
+                    <button type="submit" class="btn btn-green pull-right" style="margin:2px;">Confirmar</button>
+
+                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal" aria-hidden="true" style="margin:2px;">Cancelar</button>
+
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- End of modal window -->
+
+        </form>
+
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    <script type="text/javascript" src="/static/js/verificar-password.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () { 
+        $('.passwordSet1').attr('disabled',true);
+        $('.passwordSet2').attr('disabled',true);
+    });
+    </script>
+
+{% endblock %}

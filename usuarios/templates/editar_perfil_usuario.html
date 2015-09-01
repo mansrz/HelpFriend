@@ -1,0 +1,386 @@
+{% extends "profile_usuario.html" %}
+
+{%block contenidousuario%}
+    <!-- Editar Perfil Usuario-->
+    <div class=" col-xs-6 col-sm-8 col-md-9">
+    <div class="row">
+    <div class="signup col-md-9">
+        <h3 class="hl top-zero">Editar Usuario</h3>
+        <hr>
+        <form role="form" action="/editar_usuario/" method="post" enctype="multipart/form-data"
+              class="form-horizontal col-md-12">{% csrf_token %}
+            <!--NOMBRES-->
+            <div class="form-group">
+                <label for="Nombres" class="col-md-2">Nombres</label>
+
+                <div class="col-md-8">
+                    <input required autofocus type="text" class="form-control" onkeypress="return validarLetras(event);"
+                           id="nombre" name="nombres" data-toggle="popover" data-placement="left" data-trigger="focus"
+                           data-content="Ingresa tu nombre aquí." data-original-title="Nombre"
+                           value='{{ usuario.first_name }}'>
+                </div>
+            </div>
+            <!--APELLIDOS-->
+            <div class="form-group">
+                <label for="Apellidos" class="col-md-2">Apellidos</label>
+
+                <div class="col-md-8">
+                    <input required type="text" class="form-control" onkeypress="return validarLetras(event);"
+                           id="apellidos" name="apellidos" data-toggle="popover" data-placement="left"
+                           data-trigger="focus" data-content="Ingresa tus apellidos aquí."
+                           data-original-title="Apellidos" value="{{ usuario.last_name }}">
+                </div>
+            </div>
+            <!--CONTRASEÑA ACTUAL-->
+            <!--<div class="form-group">
+                <label for="contraseñaActual" class="col-md-2">Contrase&ntilde;a Actual</label>
+
+                <div class="col-md-8">
+                    <input required type="text" class="form-control" onkeypress="return validarLetras(event);"
+                           id="contrasenaActual" name="contrasenaActual" data-toggle="popover" data-placement="left"
+                           data-trigger="focus" data-content="Ingresa tus Contrase&ntilde;a Actual aquí."
+                           data-original-title="Contrase&ntilde;a Actual" value="{{usuario.set_password}}">
+                </div>
+            </div>-->
+            <!--CONTRASEÑA NUEVA-->
+            <!--<div class="form-group">
+                <label for="contraseñaNueva" class="col-md-2">Contrase&ntilde;a Nueva</label>
+
+                <div class="col-md-8">
+                    <input required type="text" class="form-control" onkeypress="return validarLetras(event);"
+                           id="contrasenaNueva" name="contrasenaNueva" data-toggle="popover" data-placement="left"
+                           data-trigger="focus" data-content="Ingresa tus Contrase&ntilde;a Nueva aquí."
+                           data-original-title="Contrase&ntilde;a Nueva" value="">
+                </div>
+            </div>-->
+
+
+            <!--CEDULA-->
+            <div class="form-group">
+                <label for="Cedula" class="col-md-2">C&eacute;dula</label>
+
+                <div class="col-md-8">
+                    <input required type="text" disabled pattern="([0-9]{1,15})" class="form-control" id="cedula" name="cedula" data-toggle="popover" data-placement="left" data-trigger="focus" data-content="Ingresa tu cédula o pasaporte aquí." data-original-title="Identificación" value="{{ usuario.cedula }}" onkeypress="return validarNumero(event);" minlength="10" maxlength="10" >
+
+                </div>
+                <div class="col-md-2">
+                    <select name="PrivacidadCedula" id="PrivacidadCedula" class="form-control" style="font-family: 'FontAwesome', Helvetica;">
+                        <option value="1" {% if usuario.privacidad|get_digit:4 == 1 %}selected{% endif %}>
+                          &#xf06e
+                        </option>
+                        <option value="0" {% if usuario.privacidad|get_digit:4 == 0 %}selected{% endif %}>
+                          &#xf023
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <!--TELEFONO-->
+            <div class="form-group">
+                <label for="Telefono" class="col-md-2">Tel&eacute;fono</label>
+
+                <div class="col-md-8">
+                    <input type="text" class="form-control" id="telefono" pattern="([0-9]{1,15})" name="telefono" data-toggle="popover" data-placement="left" data-trigger="focus" data-content="Ingresa tu telefono aquí." data-original-title="Telefono" value="{{ usuario.telefono }}" onkeypress="return validarNumero(event);" minlength="10" maxlength="10" >
+                </div>
+                <div class="col-md-2">
+                    <select name="PrivacidadTelefono" id="PrivacidadTelefono" class="form-control" style="font-family: 'FontAwesome', Helvetica;">
+                        <option value="1" {% if usuario.privacidad|get_digit:3 == 1 %}selected{% endif %}>
+                          &#xf06e
+                        </option>
+                        <option value="0" {% if usuario.privacidad|get_digit:3 == 0 %}selected{% endif %}>
+                          &#xf023
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <!--SITIO WEB-->
+            <div class="form-group">
+                <label for="Sitio Web" class="col-md-2">Sitio Web</label>
+
+                <div class="col-md-8">
+                    <input type="url" class="form-control" id="website" onblur="validarURL(this)" name="website"
+                           data-toggle="popover" data-placement="left" data-trigger="focus"
+                           data-content="Ingresa tu sitio web aquí." data-original-title="Sitio Web"
+                           pattern="/^(ht|f)tps?:\/\/[a-z0-9-\.]+\.[a-z]{2,4}\/?([^\s<>\#%\,\{\}\\|\\\^\[\]`]+)?$/"
+                           value='{{ usuario.web }}'>
+                </div>
+                <div class="col-md-2">
+                    <select name="PrivacidadWeb" id="PrivacidadWeb" class="form-control" style="font-family: 'FontAwesome', Helvetica;">
+                        <option value="1" {% if usuario.privacidad|get_digit:2 == 1 %}selected{% endif %}>
+                          &#xf06e
+                        </option>
+                        <option value="0" {% if usuario.privacidad|get_digit:2 == 0 %}selected{% endif %}>
+                          &#xf023
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <!--EMAIL-->
+            <div class="form-group">
+                <label for="Email" class="col-md-2">Email</label>
+
+                <div class="col-md-8">
+                    <input required type="email" class="form-control" id="email" name="email"
+                           pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}"
+                           data-toggle="popover" data-placement="left" data-trigger="focus"
+                           data-content="Ingresa un email valido." data-original-title="Email"
+                           value="{{ usuario.email }}">
+                </div>
+                <div class="col-md-2">
+                    <select name="PrivacidadMail" id="PrivacidadMail" class="form-control" style="font-family: 'FontAwesome', Helvetica;">
+                        <option value="1" {% if usuario.privacidad|get_digit:1 >= 1 %}selected{% endif %}>
+                          &#xf06e
+                        </option>
+                        <option value="0" {% if usuario.privacidad|get_digit:1 == 0 %}selected{% endif %}>
+                          &#xf023
+                        </option>
+                    </select>
+                </div>
+            </div>
+            
+            {% if membresia.estado == 1 %}
+            <!--CARGO-->
+                <div class="form-group">
+                    <label for="Email" class="col-md-2">Cargo</label>
+
+                    <div class="col-md-8">
+                        <input required type="text" class="form-control" id="cargo" name="cargo"
+                               data-toggle="popover" data-placement="left" data-trigger="focus"
+                               onkeypress="return validarLetras(event);"
+                               data-original-title="Cargo" maxlength="45"
+                               value="{{ membresia.cargo }}">
+                    </div>
+                </div>
+            <!--DESCRIPCION DEL CARGO-->
+                <div class="form-group">
+                    <label for="Email" class="col-md-2">Descripci&oacute;n del Cargo</label>
+
+                    <div class="col-md-8">
+                        <input required type="text" class="form-control" id="descripcion-cargo" name="descripcion-cargo"
+                               data-toggle="popover" data-placement="left" data-trigger="focus"
+                               onkeypress="return validarLetras(event);"
+                               data-original-title="Descripcion del Cargo" maxlength="45"
+                               value="{{ membresia.descripcion_cargo }}">
+                    </div>
+                </div>
+            {% endif %}
+	    
+            <!--IMAGEN-->
+            <div class="form-group">
+                <label class="col-md-2">Imagen</label>
+
+                <div class="col-md-4">
+                    <input name="imagen" type="file" id="files">
+
+                    <div id="id1" style="float:left" class="thumbnail">
+                        <div id="list" class="avatar">
+                            <a href="#" class="thumbnail bottom-15" data-toggle="modal" data-target="#upload-avatar">
+                                <img src="../../media/{{ usuario.foto }}" alt="...">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!--BUTTON GUARDAR CAMBIOS-->
+            <button style="float:right" class="btn btn-green">Guardar Cambios</button>
+        </form>
+
+    </div>
+    <div class="col-md-9">
+        <br>
+        <hr>
+        <br>
+    </div>
+    <div class="col-md-7 col-md-offset-1 signup">
+
+        <div class="panel panel-red">
+            <div class="panel-heading" data-toggle="collapse" data-target="#bsc" style="cursor:pointer">
+                <h3 id="titulo_suspenderCuenta" class="panel-title">Suspender Cuenta</h3>
+            </div>
+            <div class="panel-body collapse" id="bsc">
+
+                <div class="pwd-lost">
+
+                    {% if error %}
+                        <script>
+                            $('#bsc').attr('class', 'panel-body collapse in');
+                        </script>
+                        <div class="alert alert-warning alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><p>{{ error }}</p></strong>
+                        </div>
+                    {% endif %}
+
+
+                    <!-- Ventana escondida para ingresar Contraseña -->
+                    <div class="pwd-lost-f">
+                        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+                        <p>¿Est&aacute; seguro que desea suspender su cuenta de ReiNet?</p>
+
+                        <p class="text-muted">Ingresa contraseña para validar tu usuario</p>
+
+                        <form class="form-inline" role="form" action="/suspenderUsuario/"
+                              method="POST">{% csrf_token %}
+                            <div class="form-group">
+                                <label class="sr-only" for="email-pwd">Suspension de Cuenta</label>
+                                <input id="txt_password_ingresada" name="txt_password_ingresada" type="password"
+                                       class="form-control" id="email-pwd" placeholder="Ingrese su contraseña">
+                            </div>
+
+                            <!--
+                             -->
+
+                            <button id="btn_suspenderCuenta" type="button" class="btn btn-danger" data-toggle="modal" data-placement="bottom" data-target="#suspender_Cuenta_Modal">Suspender
+                            </button>
+
+                            <!-- Modal window: Send an email -->
+                            <div class="modal fade" id="suspender_Cuenta_Modal" tabindex="-1" role="dialog" aria-labelledby="sendemailtitle"
+                                 aria-hidden="true">
+                                <div class="modal-dialog modal-sm">
+                                    <div class="modal-content">
+                                        <div class="modal-header" >
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <br/>
+                                            <br/>
+
+                                            <p class="text-warning" align="justify"> Una vez enviada su solicitud de suspensi&oacute;n, su cuenta en Reinet se suspender&aacute; inmediatamente e indefinidamente. </p>
+
+                                            <p class="text-warning" align="left">Para volver a reactivarla deber&aacute; comunicarse con el administrador general de Reinet. </p>
+
+                                            <p> <strong><h5 class="text-danger">Est&aacute; seguro de querer suspender su cuenta en Reinet?</h5> </strong></p>
+
+                                            <div class="clearfix"></div>
+                                        </div>
+
+                                        <div class="modal-body">
+                                                <!--<button class="btn btn-default" data-dismiss="modal">Cancelar</button>-->
+                                                <button id="btn_aceptarSuspender" type="submit" class="btn btn-red" style="left:30%;position:relative;">Confirmar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.modal-content -->
+                                </div>
+                                <!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+                        </form>
+
+                            <script type="text/javascript" src="/static/js/verificar-password.js"></script>
+
+                            <!-- Fin de modal de suspender cuenta -->
+
+                            <script>
+                                function archivo(evt) {
+                                    var files = evt.target.files; // FileList object
+                                    // Obtenemos la imagen del campo "file".
+                                    for (var i = 0, f; f = files[i]; i++) {
+                                        //Solo admitimos imágenes.
+                                        if (!f.type.match('image.*')) {
+                                            continue;
+                                        }
+                                        var reader = new FileReader();
+                                        reader.onload = (function (theFile) {
+                                            return function (e) {
+                                                document.getElementById('id1').className += 'thumbnail';
+                                                document.getElementById('list').className += 'avatar';
+                                                // Insertamos la imagen
+                                                document.getElementById("list").innerHTML = ['<a href="#" class="thumbnail bottom-15" data-toggle="modal" data-target="#upload-avatar"> <img src="', e.target.result, '" title="', escape(theFile.name), '"/> </a>'].join('');
+                                            };
+                                        })(f);
+                                        reader.readAsDataURL(f);
+                                    }
+                                }
+                                document.getElementById('files').addEventListener('change', archivo, false);
+                            </script>
+
+                            <script type="text/javascript">
+
+
+                                    /*
+                                     Autor: Leonel Ramirez
+                                     Nombre de función: validarNumero
+                                     Parámetros: evento
+                                     Salida: permite el ingreso de solo numeros
+                                     Descripción: no permite la entrada de letras
+                                     */
+                                    function validarNumero(evt) {
+                                        var code = (evt.which) ? evt.which : evt.keyCode;
+                                        if (code == 8) {
+                                            //backspace
+                                            return true;
+                                        }
+                                        else if (code >= 48 && code <= 57) {
+                                            //is a number
+                                            return true;
+                                        }
+                                        else {
+                                            return false;
+                                        }
+                                    }
+
+
+                                    /*
+                                     Autor: Leonel Ramirez
+                                     Nombre de función: validarLetra
+                                     Parámetros: evento
+                                     Salida: permite el ingreso de solo letras
+                                     Descripción: no permite la entrada de numeros
+                                     */
+                                    function validarLetras(e) {
+                                        key = e.keyCode || e.which;
+                                        tecla = String.fromCharCode(key).toLowerCase();
+                                        letras = " áéíóúabcdefghijklmnñopqrstuvwxyz";
+                                        especiales = "8-37-39-46";
+                                        tecla_especial = false
+                                        for (var i in especiales) {
+                                            if (key == especiales[i]) {
+                                                tecla_especial = true;
+                                                break;
+                                            }
+                                        }
+                                        if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+                                            return false;
+                                        }
+                                    }
+
+
+                                    /*
+                                     Autor: Leonel Ramirez
+                                     Nombre de función: validarUrl
+                                     Parámetros: evento
+                                     Salida: ingresa automaticamente el http
+                                     Descripción: salida del http al escribir una url
+                                     */
+                                    function validarURL(abc) {
+                                        var string = abc.value;
+                                        if (!~string.indexOf("http")) {
+                                            string = "http://" + string;
+                                        }
+                                        abc.value = string;
+                                        return abc
+                                    }
+
+
+                                    function readURL(input) {
+                                        if (input.files && input.files[0]) {
+                                            var reader = new FileReader();
+                                            reader.onload = function (e) {
+                                                $('#blah')
+                                                        .attr('src', e.target.result)
+                                                        .width(200)
+                                                        .height(200);
+                                            };
+                                            reader.readAsDataURL(input.files[0]);
+                                        }
+                                    }
+
+
+                            </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

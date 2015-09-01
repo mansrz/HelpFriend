@@ -1,0 +1,255 @@
+{% extends "Usuario_Home.html" %}
+
+
+{% block contenido %}
+
+    {% block registrarinstitucion %}
+        {% include 'menusuperior/registrarinstitucion.tpl.html' %}
+    {% endblock %}
+
+    <div class="section-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h1 class="animated slideInLeft"><span>{{ usuario.username }}</span></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+
+            <!-- Menu del Perfil-->
+            <div class="col-sm-4 col-md-3">
+                <div class="user-menu bottom-15">
+                    <ul>
+                        <li>
+                            <a href="#" class="active">
+                                <i class="sign fa fa-user bg-green"></i> Ver ofertas de {{ usuario_otro.first_name }}<i
+                                    class="fa fa-chevron-right pull-right"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="sign fa fa-edit bg-blue"></i> Ver concursos de {{ usuario_otro.first_name }}<i
+                                    class="fa fa-chevron-right pull-right"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="sign fa fa-envelope bg-red"></i> Ver demandas de {{ usuario_otro.first_name }} <i
+                                    class="fa fa-chevron-right pull-right"></i>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Foto del Perfil -->
+            <div class="col-sm-8 col-md-6">
+                <div class="row">
+
+                    <div class="col-sm-4">
+                        <div class="thumbnail">
+                            <div class="avatar">
+                                <a href="#" class="thumbnail bottom-15" data-toggle="modal" data-target="#upload-avatar">
+                                    <img src="{{ usuario_otro.foto.url }}" alt="...">
+                                </a>
+                                {% comment %}
+                                 <!-- ///////////  CAMBIAR FOTO PERFIL ///////// -->
+                                <div class="avatar-bubble">
+                                <a href="#" data-toggle="modal" data-target="#upload-avatar"><i class="fa fa-plus"></i> Cambiar Imagen de Perfil</a>
+                                </div>
+                                {% endcomment %}
+                            </div>
+                        </div>
+                        <!-- /////// VENTANA EMERGENTE PARA CARGAR FOTO ///// -->
+                    </div>
+
+
+                    <!-- Perfil Principal-->
+                    <div class="col-sm-8">
+                        <h3 class="hl">{{ usuario_otro.first_name }} {{ usuario_otro.last_name }}
+                            <small> {{ institucion.nombre }} </small>
+                        </h3>
+                        <hr>
+
+                        <div class="bottom-15">
+                            <a href="#" class="btn btn-green btn-sm" data-toggle="modal" data-target="#enviarMensaje"><i
+                                    class="fa fa-envelope"></i> Redactar Mensaje</a>
+
+
+                                <!-- //// VENTANA EMERGENTE EMAIL ///// -->
+                                <div class="modal fade" id="enviarMensaje" tabindex="-1" role="dialog" aria-labelledby="sendemailtitle" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <img src={{ usuario.foto.url }} alt="...">
+                                            <h4 class="modal-title" id="sendemailtitle">{{ usuario.first_name }} {{ usuario.last_name }}</h4>
+                                            <p class="text-muted"><i class="fa fa-envelope"></i> Nuevo Mensaje</p>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form role="form" action="/enviarMensaje/" method='POST'>
+                                                {% csrf_token %}
+                                                <div class="form-group">
+                                                    <label for="Destinatario">Para:</label>
+                                                    <input type="text" class="form-control" id="destinatario" name="destinatario"
+                                                    placeholder="Destinatario" value="{{ usuario_otro.username }}" maxlength="50" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Asunto">Asunto:</label>
+                                                    <input type="text" class="form-control" id="asunto" name="asunto" placeholder="Asunto"
+                                                    maxlength="40" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Mensaje">Mensaje:</label>
+                                                    <textarea class="form-control" maxlength="1000" rows="3" id="mensaje" name="mensaje"
+                                                    required></textarea>
+                                                </div>
+                                                <button type="submit" class="btn btn-green">Enviar</button>
+                                            </form>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Informacion General-->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="col-sm-12" id="collapseGeneral">
+
+                            <div class="panel-heading btn-outline btn-primary" style="text-align:center">
+                                <h4 class="panel-title"><a data-toggle="collapse" data-parent="collapseGeneral"><i
+                                        class="fa fa-info-circle"></i> Informaci&oacute;n General </a></h4>
+                            </div>
+                            <div id="collapseInfoGeneral" class="panel-collapse collapse in">
+                                <table class="table table-hover">
+                                    <tbody id="infoGeneralBody">
+
+                                    <tr>
+                                        <td class="text-muted">Instituci&oacute;n</td>
+                                        <td style="text-align:right">
+                                            <a href="/institucion/{{institucion.id_institucion}}">{{ institucion.nombre }}</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Fecha de Registro</td>
+                                        <td style="text-align:right"class ="fecha_registro">{{ usuario_otro.fecha_registro }}</td>
+                                    </tr>
+                                    {% comment %}
+                                    <tr>
+                                        <td class="text-muted">&Aacute;reas de inter&eacute;s</td>
+                                        <td style="text-align:right">{{ usuario_otro.areasinteres }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Cargo</td>
+                                        <td style="text-align:right">{{usuario_otro.cargo}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Actividades</td>
+                                        <td style="text-align:right">[Actividades del usuario_otro]</td>
+                                    </tr>
+                                    {% endcomment %}
+                                    <tr>
+                                        <td class="text-muted">Reputaci&oacute;n</td>
+                                        <td style="text-align:right;padding-bottom: 3px;padding-top: 3px;">
+                                            <style>
+                                                .rating {
+                                                    unicode-bidi: bidi-override;
+                                                    text-align: center;
+                                                    font-size: 20px;
+                                                    color: gold;
+                                                }
+
+                                                .rating > span {
+                                                    display: inline-block;
+                                                    position: relative;
+                                                    width: 1.1em;
+                                                / / content : "\2606";
+
+                                                }
+                                            </style>
+                                            
+                                            <span style="display: none"
+                                                  id="reputacion-calificacion">{{ usuario_otro.reputacion }}</span>
+                                <span class="rating">
+                                    <span>&#x2606;</span><span>&#x2606;</span><span>&#x2606;</span><span>&#x2606;</span><span>&#x2606;</span>
+                                </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Pais</td>
+                                        <td style="text-align:right">{{ usuario_otro.fk_pais }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Estado</td>
+                                        <td style="text-align:right">{% if usuario_otro.estado == 1 %} Activo {% else %}
+                                            Inactivo{% endif %}</td>
+                                    </tr>
+                                    
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+            <!-- Informacion Contacto-->
+            <div class="col-sm-3" id="collapseContacto">
+                <div class="panel-heading btn-outline btn-warning" style="text-align:center">
+                    <h4 class="panel-title"><a data-toggle="collapse" data-parent="collapseContacto"><i
+                            class="fa fa-map-marker"></i> Informaci&oacute;n de Contacto </a></h4>
+                </div>
+                <div id="collapseInfoContacto" class="panel-collapse collapse in">
+                    <table class="table table-hover">
+                        <tbody id="infoContactoBody">
+                        <tr>
+                            <td class="text-muted">Nombre</td>
+                            <td style="text-align:right">{{ usuario_otro.first_name }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Apellido</td>
+                            <td style="text-align:right">{{ usuario_otro.last_name }}</td>
+                        </tr>
+                        {% if usuario_otro.privacidad|get_digit:3 == 1 %}
+                            <tr>
+                                <td class="text-muted">Tel&eacute;fono</td>
+                                <td style="text-align:right">{{ usuario_otro.telefono }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if usuario_otro.privacidad|get_digit:1 == 1 %}
+                            <tr>
+                                <td class="text-muted">Email</td>
+                                <td style="text-align:right">{{ usuario_otro.email }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if usuario_otro.privacidad|get_digit:2 == 1 %}
+                                    <tr>
+                                        <td class="text-muted">Website</td>
+                                        <td style="text-align:right;">{{ usuario_otro.web }}</td>
+                                    </tr>
+                                    {% endif %}
+
+                        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+

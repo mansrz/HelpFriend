@@ -1,0 +1,264 @@
+{% extends "Usuario_Home.html" %}
+
+
+
+{% block contenido %}
+
+    {% block registrarinstitucion %}
+        {% include 'menusuperior/registrarinstitucion.tpl.html' %}
+    {% endblock %}
+
+    <!-- Ventana Perfil Usuario-->
+
+    <div class="section-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h1 class="animated slideInLeft"><span>{{ usuario.username }} {{ request.es_admin }}</span></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+    <div class="row">
+    {% block menuperfil %}
+        <!-- Menu de Perfil -->
+        <div class="col-sm-4 col-md-3">
+            <div class="user-menu bottom-15">
+                <ul>
+                    <li>
+                        <a href="/perfilUsuario/" class="active">
+                            <i class="sign fa fa-user bg-green"></i> Mi Perfil <i
+                                class="fa fa-chevron-right pull-right"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/editar_usuario/">
+                            <i class="sign fa fa-edit bg-blue"></i> Editar Perfil <i
+                                class="fa fa-chevron-right pull-right"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/editarContrasena/">
+                            <i class="sign fa fa-pencil bg-orange"></i> Cambiar Contrase&ntilde;a <i
+                                class="fa fa-chevron-right pull-right"></i>
+                        </a>
+                    </li>
+                    {% if  es_admin %}
+                        <li>
+                            <a href="/perfilInstitucion/">
+                                <i class="sign fa fa-suitcase bg-turquoise"></i> Administrar Instituci&oacute;n <i
+                                    class="fa fa-chevron-right pull-right"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <a href="/BandejaDeEntrada/">
+                            <i class="sign fa fa-envelope bg-red"></i> Mensajes <i
+                                class="fa fa-chevron-right pull-right"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/cerrarSesion/">
+                            <i class="sign fa fa-sign-out bg-amethyst"></i> Cerrar Sesi&oacute;n <i
+                                class="fa fa-chevron-right pull-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    {% endblock %}
+    {% block contenidousuario %}
+        <!-- Foto del Perfil -->
+        <div class="col-sm-5 col-sm-6">
+        <div class="row">
+
+            <div class="col-sm-3">
+                <div class="thumbnail">
+                    <div class="avatar">
+                        <a href="#" class="thumbnail bottom-15" data-toggle="modal" data-target="#upload-avatar">
+                            <img src="{{ perfil.foto.url }}" alt="...">
+                        </a>
+
+                        <!-- ///////////  CAMBIAR FOTO PERFIL ///////// -->
+
+                        {% comment %}<div class="avatar-bubble">
+                    <a href="#" data-toggle="modal" data-target="#upload-avatar"><i class="fa fa-plus"></i> Cambiar Imagen de Perfil</a>
+                  </div>{% endcomment %}
+                    </div>
+                </div>
+
+                <!-- /////// VENTANA EMERGENTE PARA CARGAR FOTO /////
+                  <div class="modal fade" id="upload-avatar" tabindex="-1" role="dialog" aria-labelledby="upload-avatar-title" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="upload-avatar-title">Upload new avatar</h4>
+                      </div>
+                      <div class="modal-body">
+                        <p>Please choose a file to upload. JPG, PNG, GIF only.</p>
+                        <form role="form">
+                          <div class="form-group">
+                            <label for="file">File input</label>
+                            <input type="file" id="file">
+                            <p class="help-block">Files up to 5Mb only.</p>
+                          </div>
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                          <button type="button" class="btn btn-green" data-dismiss="modal">Upload</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                 FIN DE VENTANA EMERGENTE-->
+            </div>
+
+
+            <!-- Perfil Principal -->
+            <div class="col-sm-8">
+                <h3 class="hl">{{ usuario.first_name }} {{ usuario.last_name }}
+                    <br/>
+                    {% if institucion != "Independiente" %}
+                        <small> {{ institucion.nombre }} </small>
+                    {% else %}
+                        <small>Independiente</small>
+                    {% endif %}
+                </h3>
+                <hr>
+
+                
+            </div>
+        </div>
+
+
+        <!-- Informacion General -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="col-sm-12" id="collapseGeneral">
+
+                    <div class="panel-heading btn-outline btn-primary" style="text-align:center">
+                        <h4 class="panel-title"><a data-parent="collapseGeneral"><i class="fa fa-info-circle"></i>
+                            Informaci&oacute;n General </a></h4>
+                    </div>
+                    <div id="collapseInfoGeneral" class="panel-collapse collapse in">
+                        <table class="table table-hover">
+                            <tbody id="infoGeneralBody">
+
+                            <tr>
+                                <td class="text-muted">Instituci&oacute;n</td>
+                                <td style="text-align:right" id="link">
+                                    {% if institucion != "Independiente" %}
+                                        <a href="/institucion/{{ institucion.id_institucion }}">{{ institucion.nombre }}</a>
+                                    {% else %}
+                                        Independiente
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Fecha de Registro</td>
+                                <td style="text-align:right" class ="fecha_registro"style="display: none">{{ perfil.fecha_registro }}</td>
+                            </tr>
+                            <!--     <tr>
+                                  <td class="text-muted">&Aacute;reas de inter&eacute;s</td>
+                    <td style="text-align:right">{{ usuario.areasinteres }}</td>
+                  </tr> -->
+                            <!-- <tr>
+                    <td class="text-muted">Cargo</td>
+                    <td style="text-align:right">{{usuario.cargo}}</td>
+                  </tr>
+                   <tr>
+                    <td class="text-muted">Actividades</td>
+                    <td style="text-align:right">[Actividades del usuario]</td>
+                  </tr> -->
+                            <tr>
+                                <td class="text-muted">Reputaci&oacute;n</td>
+                                <td style="text-align:right;padding-bottom: 3px;padding-top: 3px;">
+                                    <style>
+                                        .rating {
+                                            unicode-bidi: bidi-override;
+                                            text-align: center;
+                                            font-size: 20px;
+                                            color: gold;
+                                        }
+
+                                        .rating > span {
+                                            display: inline-block;
+                                            position: relative;
+                                            width: 1.1em;
+                                        / / content : "\2606";
+
+                                        }
+                                    </style>
+
+
+                        <span style="display: none"
+                            id="reputacion-calificacion">{{ usuario.reputacion }}
+                        </span>
+                        <span class="rating">
+                            <span>&#x2606;</span><span>&#x2606;</span><span>&#x2606;</span><span>&#x2606;</span><span>&#x2606;</span>
+                        </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Pais</td>
+                                <td style="text-align:right">{{ usuario.fk_pais }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Estado</td>
+                                <td style="text-align:right">{% if usuario.estado == 1 %} Activo {% else %}
+                                    Inactivo{% endif %}</td>
+                            </tr>
+                            
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        </div>
+
+        <!-- Informacion de Contacto -->
+        <div class="col-sm-4" id="collapseContacto">
+            <div class="panel-heading btn-outline btn-warning" style="text-align:center">
+                <h4 class="panel-title"><a data-parent="collapseContacto"><i class="fa fa-map-marker"></i> Informaci&oacute;n
+                    de Contacto </a></h4>
+            </div>
+            <div id="collapseInfoContacto" class="panel-collapse collapse in">
+                <table class="table table-hover">
+                    <tbody id="infoContactoBody">
+                    <tr>
+                        <td class="text-muted">Nombre</td>
+                        <td style="text-align:right">{{ usuario.first_name }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">Apellido</td>
+                        <td style="text-align:right">{{ usuario.last_name }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">Tel&eacute;fono</td>
+                        <td style="text-align:right">{{ usuario.telefono }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">Email</td>
+                        <td style="text-align:right">{{ usuario.email }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">Website</td>
+                        <td style="text-align:right;word-break: break-all;">{{ usuario.web }}</td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endblock %}
+    </div>
+    </div>
+
+{% endblock %}
+

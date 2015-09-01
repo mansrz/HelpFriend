@@ -1,0 +1,325 @@
+{% extends "profile_institucion.html" %}
+
+
+{% block contenidoinstitucion %}
+
+            <!-- Editar Perfil Institucion-->
+            <div class=" col-xs-6 col-sm-8 col-md-9">
+                <div class="row">
+                    <div class="signup col-md-9">
+                        <h3 class="hl top-zero">Editar Instituci&oacute;n</h3>
+                        <hr>
+                        <form role="form" action="/editar_perfil_institucion/" method="post"
+                              enctype="multipart/form-data"
+                              class="form-horizontal col-md-12"
+                              name="editar_institucion" novalidate>{% csrf_token %}
+                            <!--NOMBRE-->
+                            <div class="form-group">
+                                <label for="nombreInstitucion" class="col-md-4">Nombre de la instituci&oacute;n</label>
+
+                                <div class="col-md-8">
+                                    <input disabled type="text" class="form-control" maxlength="50" id="nombreInstitucion"
+                                           name="nombreInstitucion"
+                                           placeholder="Siglas/Nombre abreviado" data-toggle="popover"
+                                           data-placement="left"
+                                           data-trigger="focus" data-content="Ingrese las siglas de la Institucion"
+                                           data-original-title="Nombre abreviado"
+                                           onkeypress="return validarLetras(event)" required
+                                           value="{{ institucion.nombre }}">
+                                </div>
+                            </div>
+                            <!--SIGLA-->
+                            <div class="form-group">
+                                <label for="siglaInstitucion" class="col-md-4">Siglas</label>
+
+                                <label class="info-board-red" id="sigla_usada" style="display: none; color: red"></label>
+
+                                <div class="col-md-8">
+                                    <input disabled type="text" class="form-control" id="siglaInstitucion"
+                                           name="siglaInstitucion"
+                                           maxlength="25" data-toggle="popover"
+                                           data-placement="left" data-trigger="focus"
+                                           data-content="Ingrese las siglas de la Institucion"
+                                           data-original-title="Nombre abreviado"
+                                           onkeypress="return validarLetras(event)"
+                                           
+                                           value="{{ institucion.siglas }}">
+                                </div>
+                            </div>
+                            <!--DESCRIPCION-->
+                            <div class="form-group">
+                                <label for="descInstitucion" class="col-md-4">Descripci&oacute;n</label>
+                                <div ng-messages='editar_institucion.descInstitucion.$error' >
+                                  <label class="info-board-red" style="display: block; color: red; text-align:center" ng-show="editar_institucion.descInstitucion.$dirty && editar_institucion.descInstitucion.$invalid">
+                                    La descripci&oacute;n debe tener entre 3 y 240 caracteres no especiales.
+                                  </label>
+                                </div>
+                                <div class="col-md-8">
+                                    <textarea class="col-md-12" class="form-control" id="descInstitucion" name="descInstitucion"
+                                           placeholder="Descripcion de la Institucion"
+                                           maxlength="240" data-toggle="popover" data-placement="left" data-trigger="focus"
+                                           data-content="Ingrese las descripcion de la Institucion"
+                                           data-original-title="Descripcion" ng-model="institucion.descInstitucion"
+                                           ng-pattern="/^[a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ_0-9 ]{3,240}$/" ng-required="true"
+                                           ng-init="institucion.descInstitucion='{{ institucion.descripcion }}'">
+                                    </textarea>
+                                </div>
+                            </div>
+                            <!--MISION-->
+                            <div class="form-group">
+                                <label for="misionInstitucion" class="col-md-4">Misi&oacute;n</label>
+                                <div ng-messages='editar_institucion.descInstitucion.$error' >
+                                  <label class="info-board-red" style="display: block; color: red; text-align:center" ng-show="editar_institucion.misionInstitucion.$dirty && editar_institucion.misionInstitucion.$invalid">
+                                    La misi&oacute;n debe tener entre 3 y 240 caracteres no especiales.
+                                  </label>
+                                </div>
+                                <div class="col-md-8">
+                                    <textarea class="col-md-12" type="text" class="form-control" id="misionInstitucion"
+                                           name="misionInstitucion"
+                                           placeholder="Misión"
+                                           maxlength="300" data-toggle="popover" data-placement="left" data-trigger="focus"
+                                           data-content="Ingrese la misión de la Institución" data-original-title="Misión"
+                                           ng-model="institucion.misionInstitucion"
+                                           ng-pattern="/^[a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ_0-9 ]{3,240}$/" ng-required="true"
+                                           ng-init="institucion.misionInstitucion='{{ institucion.mision }}'">
+                                    </textarea>
+                                </div>
+                            </div>
+                            <!--PAIS-->
+                            <div class="form-group">
+                                <label for="pais" class="col-md-4">Pa&iacute;s</label>
+
+                                <div class="col-md-8">
+                                    <select class="form-control" name="pais" id="paisInstitucion" required>
+                                        <optgroup label="Pais">
+                                            {% for pais in paises %}
+                                                  {% if institucion.pais.id == pais.id %}
+                                             <option value="{{ pais.id }}" selected>{{ pais.name }}</option>
+                                              
+                                                {%else%}
+                                                <option value="{{ pais.id }}">{{ pais.name }}</option>
+                                              
+                                              {% endif %}
+                                            {% endfor %}
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                            <!--CIUDAD-->
+                            <div class="form-group">
+                                <label for="ciudad" class="col-md-4">Ciudad</label>
+
+                                <div class="col-md-8">
+                                    <select class="form-control" name="ciudad" id="ciudadInstitucion" required>
+                                        <optgroup id="optsCiudades" label="Ciudad">
+                                            {% for ciudad in ciudades %}
+                                            {% if institucion.ciudad.id == ciudad.id %}
+                                                <option value="{{ ciudad.id }}" selected>{{ ciudad.name }}</option>
+                                                {% else %}
+                                                  <option value="{{ ciudad.id }}" >{{ ciudad.name }}</option>
+                                              {% endif %}
+                                            {% endfor %}
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                            <!--RECURSOS-->
+                            <div class="form-group">
+                                <label for="recursosInstitucion" class="col-md-4">Recursos ofrecidos</label>
+                                <div ng-messages='editar_institucion.recursosInstitucion.$error' >
+                                  <label class="info-board-red" style="display: block; color: red; text-align:center" ng-show="editar_institucion.recursosInstitucion.$dirty && editar_institucion.recursosInstitucion.$invalid">
+                                    La misi&oacute;n debe tener entre 3 y 240 caracteres no especiales.
+                                  </label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" id="recursosInstitucion"
+                                           name="recursosInstitucion"
+                                           placeholder="Recursos Ofrecidos" maxlength="200" data-toggle="popover"
+                                           data-placement="left"
+                                           data-trigger="focus"
+                                           data-content="Ingrese los recursos que ofrece la Institución"
+                                           data-original-title="Recursos Ofrecidos"
+                                           ng-model="institucion.recursosInstitucion"
+                                           ng-pattern="/^[a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ_0-9 ]{3,240}$/" ng-required="true"
+                                           ng-init="institucion.recursosInstitucion ='{{ institucion.recursos_ofrecidos }}'">
+                                </div>
+                            </div>
+                            <!--TELEFONO-->
+                            <div class="form-group">
+                                <label for="telefonoInstitucion" class="col-md-4">Tel&eacute;fono</label>
+                                <div ng-messages='editar_institucion.telefonoInstitucion.$error' >
+                                  <label class="info-board-red" style="display: block; color: red; text-align:center" ng-show="editar_institucion.telefonoInstitucion.$dirty && editar_institucion.telefonoInstitucion.$invalid">
+                                    El tel&eacute;fono debe tener entre 9 y 15 n&uacute;meros.
+                                  </label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="tel" class="form-control" maxlength="16" id="telefonoInstitucion"
+                                           name="telefonoInstitucion" pattern="([0-9]{1,15})" placeholder="Telefono del Contacto"
+                                           data-toggle="popover" data-placement="left" data-trigger="focus"
+                                           data-content="Ingrese el telefono del contacto de la Institución"
+                                           data-original-title="Telefono" onkeypress="return validarNumero(event);"
+                                           ng-model="institucion.telefonoInstitucion" ng-pattern="/^[0-9]{9,15}$/" ng-required="true"
+                                           ng-init="institucion.telefonoInstitucion='{{ institucion.telefono_contacto }}'">
+
+                                </div>
+                            </div>
+                            <!--EMAIL-->
+                            <script>
+                               
+                              </script>
+                            <div class="form-group" ng-controller="ExampleController">
+                                <label for="emailInstitucion" class="col-md-4">E-mail</label>
+                                
+                                <div class="col-md-8" >
+                                  <div ng-messages='editar_institucion.emailInstitucion.$error' >
+                                  <label class="info-board-red" style="display: block; color: red; text-align:center" ng-show="editar_institucion.emailInstitucion.$dirty && editar_institucion.emailInstitucion.$invalid">
+                                    Ingrese una dirección de email válida. Ejemplo: ejemplo@reinet.com.
+                                  </label>
+                                </div>
+                                    <input type="email"  ng-model="email" ng-init="email='{{institucion.correo}}'" class="form-control" id="emailInstitucion"
+                                           name="emailInstitucion" 
+                                          ng-pattern="/^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/"
+                                           placeholder="Email" maxlength="45" data-toggle="popover"
+                                           data-placement="left"
+                                           data-trigger="focus"
+                                           data-content="Ingrese el correo electronico de la Institución"
+                                           data-original-title="Email" ng-required >
+                                </div>
+                            </div>
+                            <!--SITIO WEB-->
+                            <div class="form-group">
+                                <label for="webInstitucion" class="col-md-4">Sitio web</label>
+                              
+                                <div class="col-md-8">
+                                    <div ng-messages='editar_institucion.webInstitucion.$error' >
+                                  <label class="info-board-red" style="display: block; color: red; text-align:center" ng-show="editar_institucion.webInstitucion.$dirty && editar_institucion.webInstitucion.$invalid">
+                                     Ingrese una url válida.
+                                  </label>
+                                </div>
+                                <input type="text" class="form-control" maxlength="245" id="webInstitucion"
+                                       name="webInstitucion" placeholder="Dirección web"
+                                       data-toggle="popover" data-placement="left" data-trigger="focus"
+                                       data-content="Ingrese la dirección web de la Institución"
+                                       data-original-title="Dirección Web" ng-model="institucion.webInstitucion"
+                                       ng-pattern="/^(ht|f)tps?:\/\/[a-z0-9-\.]+\.[a-z]{2,4}\/?([^\s<>\#%\,\{\}\\|\\\^\[\]`]+)?$/" ng-required="true"
+                                       ng-init="institucion.webInstitucion='{{ institucion.web }}'">
+
+                                </div>
+                            </div>
+                            <!--LOGO-->
+                            <div class="form-group">
+                                <label class="col-md-4" for="logo">Logo</label>
+
+                                <div class="col-md-4">
+                                    <input type="file" name="logo" id="files">
+
+                                    <div id="idLogo" style="float:left" class="thumbnail">
+                                        <div id="list" class="avatar">
+                                            <a href="#" class="thumbnail bottom-15" data-toggle="modal"
+                                               data-target="#upload-avatar">
+                                                <img src="../../media/{{ institucion.logo }}" alt="...">
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--Boton Guardar Cambios-->
+                            <button type="submit" style="float:left" class="btn btn-green"
+                                    >Guardar Cambios</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <script type="text/javascript">
+        /*
+         Autor: Erika Narváez
+         Nombre de función: validarNumero
+         Parámetros: evento
+         Salida: permite el ingreso de solo numeros
+         Descripción: no permite la entrada de letras
+
+         */
+
+        function validarNumero(evt) {
+            var code = (evt.which) ? evt.which : evt.keyCode;
+            if (code == 8) {
+                //backspace
+                return true;
+            }
+            else if (code >= 48 && code <= 57) {
+                //is a number
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        /*
+         Autor: Erika Narváez
+         Nombre de función: validarLetra
+         Parámetros: evento
+         Salida: permite el ingreso de solo letras
+         Descripción: no permite la entrada de numeros
+         */
+        function validarLetras(e) {
+            key = e.keyCode || e.which;
+            tecla = String.fromCharCode(key).toLowerCase();
+            letras = " áéíóúabcdefghijklmnñopqrstuvwxyz";
+            especiales = "8-37-39-46";
+
+            tecla_especial = false
+            for (var i in especiales) {
+                if (key == especiales[i]) {
+                    tecla_especial = true;
+                    break;
+                }
+            }
+
+            if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+                return false;
+            }
+        }
+
+        /*
+         Autor: Leonel Ramirez
+         Nombre de función: validarUrl
+         Parámetros: evento
+         Salida: ingresa automaticamente el http
+         Descripción: salida del http al escribir una url
+         */
+
+        function validarURL(abc) {
+            var string = abc.value;
+            if (!~string.indexOf("http")) {
+                string = "http://" + string;
+            }
+            abc.value = string;
+            return abc
+        }
+
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#blah')
+                            .attr('src', e.target.result)
+                            .width(200)
+                            .height(200);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+
+{% endblock %}
+
+

@@ -1,0 +1,252 @@
+{% extends "Usuario_Home.html" %}
+
+
+
+{% block contenido %}
+
+    {% block registrarinstitucion %}
+        {% include 'menusuperior/registrarinstitucion.tpl.html' %}
+    {% endblock %}
+
+    <!-- Ventana Perfil Usuario -->
+
+    <div class="section-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h1 class="animated slideInLeft"><span>{{ institucion.nombre }}</span></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container ">
+    <div class="row">
+
+        <!-- Menu del Perfil -->
+        <div class="col-md-11 col-sm-11 col-sm-offset-1">
+
+            <!-- //// PERFIL PRINCIPAL ///// -->
+            <div class="col-sm-12">
+              <h3 class="hl" align="center" style="margin-top:0; margin-bottom:15px">
+                <strong>{{ institucion.nombre }}</strong>
+                
+              </h3>
+              <br>
+            </div>  
+            <div class="col-md-3 col-sm-3">
+                  <div class="thumbnail col-md-12" style="margin-bottom: 0px;">
+                      <div class="avatar">
+                          <a href="#" class="thumbnail bottom-15" data-toggle="modal" data-target="#upload-avatar">
+                              <img src="../../media/{{ institucion.logo }}" alt="...">
+                          </a>
+                      </div>
+                  </div>
+                  <div>
+                    <a href="#" class="col-sm-12 btn btn-green btn-sm" data-toggle="modal" data-target="#enviarMensaje" style="font-weight:bold;"><i class="fa fa-envelope"></i> Redactar Mensaje</a>
+
+<!-- //// VENTANA EMERGENTE EMAIL ///// -->
+<div class="modal fade" id="enviarMensaje" tabindex="-1" role="dialog" aria-labelledby="sendemailtitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close cancelar" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <img src={{ usuario.foto.url }} alt="...">
+            <h4 class="modal-title" id="sendemailtitle">{{ usuario.first_name }} {{ usuario.last_name }}</h4>
+            <p class="text-muted"><i class="fa fa-envelope"></i> Nuevo Mensaje</p>
+            <div class="clearfix"></div>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="form-group">
+                    <label for="Destinatario">Para:</label>
+                    <p class="text-muted"> {{ institucion.siglas }}</p>
+                    <input type="hidden" id="destinatario" name="destinatario" value="{{ institucion.siglas }}" />
+                </div>
+                <div class="form-group">
+                    <label for="Asunto">Asunto:</label>
+                    <input type="text" class="form-control" id="asunto" name="asunto" placeholder="Asunto"
+                    maxlength="40" required>
+                </div>
+                <div class="form-group">
+                    <label for="Mensaje">Mensaje:</label>
+                    <textarea class="form-control" maxlength="1000" rows="3" id="mensaje" name="mensaje"
+                    required></textarea>
+                </div>
+                <button data-dismiss="modal" class="btn btn-blue" id="enviarMensajePerfilInstitucion">Enviar</button>
+                 <button type="button" class="btn btn-default cancelar" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+            </form>
+        </div>
+        </div>
+    </div>
+</div>
+
+                      <button class="col-sm-12 btn btn-blue btn-sm" id="btn_sucribirte" style="text-align:center; margin-top:5px;" type="button" data-toggle="popover" data-placement="bottom">
+                      <i class="fa fa-user-plus  btn-sm"></i>Solicitar Membresia</button>
+
+                      <script type="text/javascript"> 
+                      var misma_institucion = {{misma_institucion|yesno:"true,false"}}; 
+                      var es_afiliado={{es_afiliado|yesno:"true,false"}};
+                      </script>   
+
+                      <div class="col-sm-12 alert-dismissible" style="text-align:center; margin-top:10px;" role="alert" id="info_suscripcion">
+                        <button id="info_suscripcion_close" type="button" class="close" onclick="$('#info_suscripcion').hide();" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><p id="info_suscripcion_txt"></p></strong>
+                      </div> 
+
+                    <div class="col-md-12" >                    
+                        <div class="vcard-stats">
+                            <a class="vcard-stat" href="#" style="text-decoration:none">
+                              <strong class="vcard-stat-count">{{ numMiembros }}</strong>
+                              <span class="text-muted">Membres&iacute;as</span>
+                            </a>
+                            <a class="vcard-stat" href="#" style="text-decoration:none">
+                              <strong class="vcard-stat-count">0</strong>
+                              <span class="text-muted">Concursos</span>
+                            </a>
+                            <a class="vcard-stat" href="#" style="text-decoration:none">
+                              <strong class="vcard-stat-count">0</strong>
+                              <span class="text-muted">Incubaciones</span>
+                            </a>
+                        </div>
+                    </div>                 
+                   
+            </div>
+              
+                
+                
+                
+                <div id="popover_content_wrapper" data-placement="bottom" style="display: none" role="dialog">
+                
+                    <div>Complete el siguiente formulario:</div>
+                    <br>
+                    <label>Cargo</label>
+                    <input id="txt_cargo" name="txt_cargo" type="text"
+                                   class="form-control" id="cargo" placeholder="Ingrese su cargo">
+                    <div style="display:none;" id="errorCargo" class="alert alert-danger" role="alert">El nombre del cargo es requerido y no debe contener caracteres especiales</div>
+                    <br/>
+                    <label>Descripci&oacute;n</label>
+                    <textarea id="txt_description" style="resize:none" maxlength="400" rows="4" name="txt_description" type="text" class="form-control" id="descripcion" placeholder="Ingrese la descripcion del cargo"></textarea>
+                    <div style="display:none;" id="errorDescripcion" class="alert alert-danger" role="alert">La descripci&oacute;n es requerida y no debe contener caracteres como ¿? ¡! $ % /\"</div>
+                    <br/>
+                    <button id="btn_aceptar_Suscripcion" type="button" class="btn btn-blue" style="left:30%">
+                        Enviar
+                    </button>
+                    <button id="btn_cancelar_Suscripcion" type="button" class="btn btn-default" style="left:30%;margin-left:30px;" data-toggle="clickover" onclick="$('#btn_sucribirte').popover('hide');">
+                        Cancelar
+                    </button>
+                    
+                </div>
+                
+            </div>
+            <!-- Informacion General-->
+            <div class="col-md-9 col-sm-9">
+                    <div class="col-md-12 col-sm-12" style="margin-bottom:10px">
+                        <div class="block-header">
+                            <h2 style="margin:0 0 5px 0;background-color:#515151">
+                                <span class="title">Misi&oacute;n</span>
+                                <span class="decoration"></span>
+                                <span class="decoration"></span>
+                                <span class="decoration"></span>
+                            </h2>
+                        </div>
+                        <p class="text-left" style="margin-bottom:14px">
+                            
+                            {{ institucion.mision }}
+                        </p>
+                        <div class="block-header">
+                                <h2 style="margin:0 0 5px 0;font-size: 18px;">
+                                    <span class="title" >Descripci&oacute;n</span>
+                                    <span class="decoration"></span>
+                                    <span class="decoration"></span>
+                                </h2>
+                            </div>
+                            <p class="text-left" style="font-size: 12px; margin-bottom:14px">
+                                
+
+                                {{ institucion.descripcion }}
+                            </p>
+                    </div>
+                    <div class="col-md-12 col-sm-12">
+                            <div class="block-header">
+                                <h2 style="margin:0 0 5px 0;font-size: 18px;">
+                                    <span class="title" >Recursos Ofrecidos</span>
+                                    <span class="decoration"></span>
+                                </h2>
+                            </div>
+                            <p class="text-left" style="font-size: 12px;">
+                                
+                                {{ institucion.recursos_ofrecidos }}
+                            </p>
+                    </div>
+
+                    <div class="col-md-6 col-sm-12" align="left"> 
+                        <div class="panel-heading btn-outline btn-success" style="text-align:center;background-color:#123A82">
+                            <h4 class="panel-title"> Informaci&oacute;n General </h4>
+                        </div>
+                        <div style="margin:10px">
+                            <i class="fa fa-sort-alpha-asc" style="margin-right:10px"></i>{{ institucion.siglas }}
+                        </div>
+                        <div style="margin:10px">
+                            <i class="fa fa-globe" style="margin-right:10px"></i> {{ institucion.pais }}
+                        </div>
+                        <div style="margin:10px">
+                            <i class="fa fa-code" style="margin-right:10px"></i>{{ institucion.web }}
+                        </div>
+                        <hr style="margin:10px 0 10px 0">
+                    </div>
+
+                    <div class="col-md-6 col-sm-12">
+                        <div class="block-inverse">
+                            <div class="head-inverse" style="background: #C11F1F;">
+                                <div class="text-center" style="color:white">Contacto</div>
+                            </div>
+                            <div class="body-inverse">
+                                <div class="user-gallery text-center">
+                                    <table class="table table-hover" style="margin-bottom:0">
+                                        <tbody id="infoContactoBody">
+                                            <tr>
+                                                <td class="text-muted">Nombre</td>
+                                                <td style="text-align:left">{{ duenho.first_name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-muted">Apellido</td>
+                                                <td style="text-align:left">{{ duenho.last_name }}</td>
+                                            </tr>
+                                            {% if duenho.privacidad|get_digit:3 == 1 %}
+                                            <tr>
+                                                <td class="text-muted">Tel&eacute;fono</td>
+                                                <td style="text-align:left">{{ duenho.telefono }}</td>
+                                            </tr>
+                                            {% endif %}
+                                            {% if duenho.privacidad|get_digit:1 == 1 %}
+                                            <tr>
+                                                <td class="text-muted">Email</td>
+                                                <td style="text-align:left">{{ duenho.email }}</td>
+                                            </tr>
+                                            {% endif %}
+                                            {% if duenho.privacidad|get_digit:2 == 1 %}
+                                            <tr>
+                                                <td class="text-muted">Website</td>
+                                                <td style="text-align:left;word-break: break-all;">{{ duenho.web }}</td>
+                                            </tr>
+                                            {% endif %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+        </div>
+    </div>
+    <input id="inst_value" type="hidden" value="{{institucion.id_institucion}}">
+</div>
+<script>
+    var emisor = '{{ usuario.id }}';
+    console.log('id de emisor' + emisor);
+</script>
+<script type="text/javascript" src="/static/js/perfil-otra-institucion.js"></script>
+
+{% endblock %}

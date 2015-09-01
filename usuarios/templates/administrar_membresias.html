@@ -1,0 +1,106 @@
+{% extends "profile_institucion.html" %}
+
+{% block contenidoinstitucion %}
+            <div class="col-md-8">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#solicitudes" data-toggle="tab">Solicitudes</a></li>
+                    <li role="presentation"><a href="#miembros" data-toggle="tab">Miembros</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade in active" id="solicitudes">
+                        <!-- ////// Contenido del tab de solicitudes /////// -->
+
+                    <div class="col-md-offset-11"><a href=""><i id="btn_update" class="fa fa-refresh"></i></a></div>
+                    <hr>
+
+                        <div class="row">
+                            <div class="col-md-12" style="height: 500px;overflow:hidden">
+                                <div class="col-md-12 pm-list" style="height:100%; width:100%;overflow:auto">
+                                    <ul id="panel_membresias">
+                                        
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                       
+
+                    </div>
+                    <div class="tab-pane fade" id="miembros">
+                        <!-- ////// Contenido del tab de solicitudes /////// -->
+                        <div class="row">
+                            <div class="col-md-12" style="height:500px;overflow:hidden">
+                                <div class="pm-list" style="height:100%; width:100%;overflow:auto">
+                                    <ul id="panel_miembros">
+                                        
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <script>
+                            $(document).ready(function(){
+                                $(function(){
+
+                                  console.log('dentro del panel mem');
+                                  console.log({{institucion.id_institucion}})
+                                  $('#panel_membresias').ready(actualizarBuzonMembresia);
+                                  $('#btn_update').click(actualizarBuzonMembresia);
+                                  $('#panel_miembros').ready(actualizarListaMiembros);
+
+                                    function actualizarBuzonMembresia(){
+                                        console.log('actualizandooo')
+                                      $.ajax({
+                                        data:{
+                                          'institucion':{{institucion.id_institucion}}
+                                        },
+                                        type:'get',
+                                        url: '/buzonMembresias/',
+                                        success: function(data){
+                                          $('#panel_membresias').html(data)
+                                        }
+                                      });
+                                    }
+          
+
+                                    function actualizarListaMiembros(){
+                                          console.log('actualizandooo miembros')
+                                      $.ajax({
+                                        data:{
+                                          'institucion':{{institucion.id_institucion}}
+                                        },
+                                        type:'get',
+                                        url: '/MiembrosInstitucion/',
+                                        success: function(data){
+                                          $('#panel_miembros').html(data)
+                                        }
+                                      });
+                                    }
+
+
+                                  $(".nav-tabs a").on('click',function(event){
+                                      var x = $(event.target).text();
+
+                                        if (x == 'Miembros'){
+                                              actualizarListaMiembros();
+                                        }else{
+                                          if( x == 'Solicitudes'){
+                                              actualizarBuzonMembresia();
+                                          }
+                                        }
+
+                                  });
+
+                                });
+                              });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
